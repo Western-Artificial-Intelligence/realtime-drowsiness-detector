@@ -37,19 +37,21 @@ cd wai-drowsy
 
 📂 Repository Structure (once set up)
 
+```bash
 wai-drowsy/
-├── data/ # Sample demo clips
-├── models/ # YOLO/ONNX models (ignored in git)
+├── data/                   # Sample demo clips
+├── models/                 # YOLO/ONNX models (ignored in git)
 ├── src/
-│ ├── wai/
-│ │ ├── camera.py # Frame capture
-│ │ ├── landmarks.py # Facial landmarks via MediaPipe
-│ │ ├── signals.py # EAR/MAR/head pose logic
-│ │ ├── fusion.py # Combines multiple signals
-│ │ ├── alerts.py # Visual/audio alerts
-│ │ └── ui.py # Streamlit interface
-├── tests/ # Basic smoke tests
+│   ├── wai/
+│   │   ├── camera.py        # Frame capture
+│   │   ├── landmarks.py     # Facial landmarks via MediaPipe
+│   │   ├── signals.py       # EAR/MAR/head pose logic
+│   │   ├── fusion.py        # Combines multiple signals
+│   │   ├── alerts.py        # Visual/audio alerts
+│   │   └── ui.py            # Streamlit interface
+├── tests/                  # Basic smoke tests
 ├── requirements.txt
 ├── README.md
 └── LICENSE
+```
 
