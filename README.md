@@ -24,12 +24,10 @@ Alert the driver with on-screen and audio cues to re-engage attention.
 - Optional YOLO-based phone detection
 
 🧰 Tech Stack
-Component	Technology
-Computer Vision	OpenCV, MediaPipe
-ML Models (optional)	PyTorch, YOLOv8, ONNX Runtime
-Frontend / UI	Streamlit
-Language	Python 3.11+
-Version Control	Git + GitHub
+Computer Vision:	OpenCV, MediaPipe
+ML Models:	PyTorch, YOLOv8, ONNX Runtime (potentially)
+Frontend/UI: Streamlit (most likely)
+
 
 ⚙️ Setup Instructions
 1. Clone the repository
