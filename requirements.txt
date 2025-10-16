@@ -1,0 +1,9 @@
+opencv-python
+mediapipe
+streamlit
+torch
+ultralytics
+numpy
+pytest
+playsound
+
