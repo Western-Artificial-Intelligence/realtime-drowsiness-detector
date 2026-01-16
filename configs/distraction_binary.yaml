@@ -1,0 +1,12 @@
+# Binary distracted driving classification dataset
+# Generated in Step 2 (driver-safe split)
+
+path: data/processed/distraction_binary
+
+train: train
+val: val
+test: test
+
+names:
+  0: not_distracted
+  1: distracted
