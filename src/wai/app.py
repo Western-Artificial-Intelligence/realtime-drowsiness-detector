@@ -121,5 +121,15 @@ def main():
         cam.release()
         cv2.destroyAllWindows()
 
+        final_metrics = blink.metrics()
+        print("\n" + "="*50)
+        print("SESSION SUMMARY")
+        print("="*50)
+        print(f"Total blinks: {final_metrics['blink_count']}")
+        print(f"Total closed time: {final_metrics['closed_eye_secs']:.2f}s")
+        print(f"Session duration: {time.time() - session_start:.2f}s")
+        print("="*50)
+        print(final_metrics)
+
 if __name__ == "__main__":
     main()
