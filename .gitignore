@@ -1,6 +1,10 @@
 __pycache__/
 models/
-data/
+data/*
+!data/scripts/
 *.pyc
 .DS_Store
+.venv/
+.ipynb_checkpoints/
+*.zip
 
