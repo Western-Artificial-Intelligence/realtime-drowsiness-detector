@@ -8,25 +8,20 @@ import shutil
 from pathlib import Path
 from collections import Counter, defaultdict
 
-# ====== RAW INPUTS (StateFarm) ======
 RAW_ROOT = Path("data/raw/statefarm")
 RAW_TRAIN = RAW_ROOT / "imgs" / "train"
 DRIVER_CSV = RAW_ROOT / "driver_imgs_list.csv"
 
-# ====== OUTPUT (binary dataset) ======
 OUT_ROOT = Path("data/processed/distraction_binary")
 
-# ====== CLASS MAPPING ======
 SAFE_CLASS = "c0"
 SAFE_LABEL = "not_distracted"
 DISTRACTED_LABEL = "distracted"
 
-# ====== SPLIT SETTINGS ======
 SPLIT_RATIOS = {"train": 0.8, "val": 0.1, "test": 0.1}
 RANDOM_SEED = 42
 
-# If True: copy images (safe but uses disk). If False: symlink (faster, but can be annoying on Windows).
-COPY_FILES = True
+COPY_FILES = True  # copy vs symlink
 
 
 def ensure_dirs() -> None:
@@ -36,10 +31,7 @@ def ensure_dirs() -> None:
 
 
 def read_driver_map(csv_path: Path) -> dict[str, list[str]]:
-    """
-    Returns: driver_id -> list of relative image paths like 'c3/img_123.jpg'
-    CSV columns (StateFarm): subject, classname, img
-    """
+    # returns driver_id -> list of image paths
     driver_to_images: dict[str, list[str]] = defaultdict(list)
 
     with csv_path.open("r", newline="", encoding="utf-8") as f:
@@ -59,9 +51,6 @@ def read_driver_map(csv_path: Path) -> dict[str, list[str]]:
 
 
 def assign_driver_splits(drivers: list[str], seed: int = 42) -> dict[str, str]:
-    """
-    Returns: driver_id -> split ('train'|'val'|'test') using ratios.
-    """
     rng = random.Random(seed)
     drivers = drivers.copy()
     rng.shuffle(drivers)
@@ -105,11 +94,10 @@ def copy_or_link(src: Path, dst: Path) -> None:
 
 
 def main() -> None:
-    # Sanity checks
     if not DRIVER_CSV.exists():
-        raise FileNotFoundError(f"Missing {DRIVER_CSV}. Did you finish Step 1?")
+        raise FileNotFoundError(f"Missing {DRIVER_CSV}")
     if not RAW_TRAIN.exists():
-        raise FileNotFoundError(f"Missing {RAW_TRAIN}. Did you finish Step 1?")
+        raise FileNotFoundError(f"Missing {RAW_TRAIN}")
 
     ensure_dirs()
 
@@ -118,12 +106,11 @@ def main() -> None:
 
     driver_split = assign_driver_splits(drivers, seed=RANDOM_SEED)
 
-    # Stats counters
     counts = Counter()
     split_driver_counts = Counter(driver_split.values())
 
     print("Drivers per split:", dict(split_driver_counts))
-    print("Building binary dataset... (this can take a while)")
+    print("Building dataset...")
 
     missing_files = 0
 
@@ -131,7 +118,6 @@ def main() -> None:
         split = driver_split[driver]
 
         for rel in rel_images:
-            # rel is "cX/img_YYY.jpg"
             cls = rel.split("/", 1)[0]
             label = map_binary_label(cls)
 
@@ -140,8 +126,6 @@ def main() -> None:
                 missing_files += 1
                 continue
 
-            # Keep filenames unique to avoid collisions across classes/drivers
-            # Format: <driver>__<original_filename>
             orig_name = Path(rel).name
             dst_name = f"{driver}__{orig_name}"
             dst = OUT_ROOT / split / label / dst_name
@@ -150,9 +134,8 @@ def main() -> None:
             counts[(split, label)] += 1
 
     if missing_files:
-        print(f"WARNING: {missing_files} files referenced in CSV were missing on disk.")
+        print(f"WARNING: {missing_files} files missing")
 
-    # Print class counts
     print("\nImage counts:")
     for split in ("train", "val", "test"):
         for label in (SAFE_LABEL, DISTRACTED_LABEL):
