@@ -1,10 +1,27 @@
 __pycache__/
-models/
-data/*
-!data/scripts/
 *.pyc
 .DS_Store
 .venv/
 .ipynb_checkpoints/
 *.zip
+*.cache
+
+# Models - ignoring all models except the best one and confusion matrix
+models/*
+!models/distraction_yolov8/
+models/distraction_yolov8/*
+!models/distraction_yolov8/best.pt
+!models/distraction_yolov8/confusion_matrix.png
+
+# Data - ignore raw data but keep scripts
+data/*
+!data/scripts/
+!data/scripts/*.py
+
+# Logs and temporary files
+*.log
+experiment_*.txt
+refinement_*.txt
+experiment_*.json
+refinement_*.json
 
