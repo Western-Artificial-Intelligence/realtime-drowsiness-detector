@@ -15,6 +15,10 @@ import time
 import numpy as np
 from alerts import handle_drowsiness
 import ui
+import sys
+import site
+
+sys.path.append(site.getusersitepackages())
 
 def parse_args(argv=None):
     p = argparse.ArgumentParser(description="Real-time drowsiness detection")
@@ -60,6 +64,7 @@ def main():
     session_start = time.time()
     frame_count = 0
     fps_start_time = time.time()
+    fps = 0
 
     try:
         while True:
@@ -98,17 +103,18 @@ def main():
                 fps_start_time = time.time()
             
             
+            # 1. Choose base frame (annotated or raw)
             display_frame = lm_frame.annotated_frame if lm_frame is not None else frame
             
-            # Draw HUD overlay
-            # display_frame = ui.draw_hud(
-            #     display_frame,
-            #     metrics,
-            #     fps,
-            #     alert_state
-            # )
+            # 2. Draw the HUD (Uncomment and format correctly)
+            display_frame = ui.draw_hud(
+                display_frame,
+                metrics,
+                fps,
+                alert_state
+            )
             
-            # Show frame
+            # 3. Show the final combined frame
             cv2.imshow('Drowsiness Detection', display_frame)
             
             # Check for quit
@@ -120,6 +126,16 @@ def main():
     finally:
         cam.release()
         cv2.destroyAllWindows()
+
+        image.pngfinal_metrics = blink.metrics()
+        print("\n" + "="*50)
+        print("SESSION SUMMARY")
+        print("="*50)
+        print(f"Total blinks: {final_metrics['blink_count']}")
+        print(f"Total closed time: {final_metrics['closed_eye_secs']:.2f}s")
+        print(f"Session duration: {time.time() - session_start:.2f}s")
+        print("="*50)
+        print(final_metrics)
 
 if __name__ == "__main__":
     main()
