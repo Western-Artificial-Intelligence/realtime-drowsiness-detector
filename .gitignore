@@ -7,6 +7,7 @@ __pycache__/
 *.cache
 
 # Models - ignoring all models except the best one and confusion matrix
+/yolov8*-cls.pt
 models/*
 !models/distraction_yolov8/
 models/distraction_yolov8/*
